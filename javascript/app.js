@@ -6,23 +6,25 @@ function renderButtons() {
     // Deleting the movie buttons prior to adding new movie buttons
     // (this is necessary otherwise we will have repeat buttons)
     $("#topics-view").empty();
-    $("topics").empty();
+    $("#topics").empty();
+    $("#topic").empty();
+    $("#gifs-appear-here").empty();
     
 
     // Looping through the array of topics
     for (var i = 0; i < topics.length; i++) {
       // Generate buttons for each topic in the array.
       // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
-      var a = $("<button>");
+      var newTop = $("<button>");
       // Adding a class ot topic-btn to the button
-      a.addClass("topic-btn");
+      $(newTop).addClass("topic-btn");
       // Adding a data-attribute with a value of the topics at index i
-      a.attr("data-name", topics[i]);
+      $(newTop).attr("data-name", topics[i]);
       // Providing the button's text with a value of the topics at index i
-      a.text(topics[i]);
+      $(newTop).text(topics[i]);
       // Adding the button to the HTML
-      $("#topics-view").append(a);
-      console.log(a);
+      $("#topics-view").append(newTop);
+      console.log(newTop);
     }
   }
 
@@ -32,6 +34,7 @@ function renderButtons() {
     event.preventDefault();
 
     // This line will grab the text from the input box
+    var topic = $("#topic").val().trim();
 
     // The topic from the textbox is then added to our array
     topics.push(topic);
@@ -51,7 +54,7 @@ function renderButtons() {
 // =================================================================================================
 
 function displayTopicInf0() {
-var topicReq = $(this).attr("#topic-input");
+var topicReq = $(this).attr("#add-topic");
 
       // Constructing a URL to search Giphy for the name of the person who said the quote
       var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
@@ -61,16 +64,15 @@ var topicReq = $(this).attr("#topic-input");
       $.ajax({
         url: queryURL,
         method: "GET"
-      })
-        // After the data comes back from the API
-        .then(function(response) {
-          // Storing an array of results in the results variable
+      }).then(function(response) {
+          // Storing an array of results in the results variable'
+         
           var results = response.data;
 
           // Looping over every result item
           for (var i = 0; i < results.length; i++) {
 
-            // Only taking action if the photo has an appropriate rating
+            // Only taking action if the gif has an appropriate rating
             if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
               // Creating a div for the gif
               var gifDiv = $("<div>");
@@ -93,8 +95,9 @@ var topicReq = $(this).attr("#topic-input");
               gifDiv.append(topicImage);
 
               // Prepending the gifDiv to the "#gifs-appear-here" div in the HTML
-              $("#gifs-appear-here").html(gifDiv);
+              $("#gifs-appear-here").prepend(gifDiv);
             }
           }
         });
     }
+    displayTopicInf0()
